@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AidivGPT - Live Code Editor and AI Assistant</title>
+  
+  <hta:application
+    id="AidivGPT"
+    applicationname="AidivGPT"
+    border="none"
+    caption="yes"
+    maximizebutton="no"
+    minimizebutton="no"
+    scroll="no"
+    sysmenu="yes"
+    windowstate="normal"
+    icon="icon.ico" />
+
+  <style>
+    body {
+      background-color: #1e1e2f;
+      color: #f5f5f5;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    header {
+      background-color: #444;
+      color: #fff;
+      padding: 20px 0;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      font-weight: 700;
+    }
+
+    footer {
+      background-color: #333;
+      color: #ccc;
+      text-align: center;
+      padding: 15px 0;
+      width: 100%;
+      margin-top: auto;
+      box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    footer a {
+      color: #ccc;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    footer a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 40px auto;
+    }
+
+    .content-section {
+      display: flex;
+      gap: 20px;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background-color: #2c2f44;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      width: 100%;
+    }
+
+    .card-body {
+      padding: 0;
+    }
+
+    .btn-success {
+      background-color: #28a745;
+      border-color: #28a745;
+      padding: 15px;
+      font-size: 18px;
+      border-radius: 8px;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-success:hover {
+      background-color: #218838;
+    }
+
+    .btn-download {
+      background-color: #007bff;
+      border-color: #007bff;
+      padding: 15px;
+      font-size: 18px;
+      color: white;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-download:hover {
+      background-color: #0056b3;
+    }
+
+    .error-output {
+      background-color: #fff;
+      color: #d9534f;
+      padding: 15px;
+      border-radius: 8px;
+      border: 2px solid #ddd;
+      margin-top: 20px;
+      font-size: 14px;
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .editor, .result-frame {
+      background-color: #1e1e2f;
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 15px;
+      color: #fff;
+    }
+
+    .editor textarea {
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 10px;
+      width: 100%;
+      font-family: monospace;
+      font-size: 14px;
+      color: #ddd;
+    }
+
+    .editor textarea:focus {
+      outline: none;
+      border-color: #28a745;
+    }
+
+    .iframe-container {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background-color: #2c2f44;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header>
+    <h1>AidivGPT</h1>
+    <p>Live Code Editor and AI Assistant</p>
+  </header>
+
+  <div class="container">
+    <!-- AI Assistant Section -->
+    <div class="content-section">
+      <div class="card iframe-container">
+        <h3>AI Assistant</h3>
+        <iframe src="https://copilotstudio.microsoft.com/environments/Default-8e2c9d27-2e35-4c0b-bbad-f270b43481ab/bots/Default_agent/webchat?__version__=2" frameborder="0" style="width: 100%; height: 300px;"></iframe>
+      </div>
+    </div>
+
+    <!-- Code Editor Section -->
+    <div class="content-section">
+      <div class="card editor">
+        <div class="card-body">
+          <h3>Code Editor</h3>
+          <textarea id="html-code" rows="10" placeholder="Write your HTML, CSS, or JavaScript code here..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Button Section -->
+    <div class="content-section">
+      <div class="col-12">
+        <button class="btn btn-success" onclick="runCode()">Run Code</button>
+      </div>
+    </div>
+
+    <!-- Result Section -->
+    <div class="content-section">
+      <div class="card result-frame">
+        <h3>Result</h3>
+        <iframe id="result" width="100%" height="400px" frameborder="0"></iframe>
+      </div>
+    </div>
+
+    <!-- Error Output Section -->
+    <div class="content-section">
+      <div class="col-12">
+        <h3>Errors</h3>
+        <div class="error-output" id="error-output">No errors yet...</div>
+      </div>
+    </div>
+
+    <!-- Download Section -->
+    <div class="content-section">
+      <button class="btn btn-download" onclick="downloadCode()">Download HTML</button>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <footer>
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+    <p>Made by Rishi | AidivGPT - Your live code editor & AI assistant</p>
+  </footer>
+
+  <script>
+    function downloadCode() {
+      const code = document.getElementById('html-code').value;
+      const blob = new Blob([code], { type: 'text/html' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'code.html';
+      link.click();
+    }
+
+    function runCode() {
+      const code = document.getElementById('html-code').value;
+      const iframe = document.getElementById('result');
+      const errorOutput = document.getElementById('error-output');
+
+      // Clear previous errors
+      errorOutput.textContent = 'No errors yet...';
+
+      try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        iframeDoc.open();
+        iframeDoc.write(code);
+        iframeDoc.close();
+      } catch (error) {
+        errorOutput.textContent = `Error: ${error.message}`;
+      }
+
+      iframe.contentWindow.onerror = function (message, source, lineno, colno, error) {
+        errorOutput.textContent += `\nError: ${message} at line ${lineno}, column ${colno}\n`;
+        return true;
+      };
+    }
+
+    window.onerror = function (message, source, lineno, colno, error) {
+      const errorOutput = document.getElementById('error-output');
+      errorOutput.textContent = `Global Error: ${message} at line ${lineno}, column ${colno}\n${error.stack}`;
+      return true;
+    };
+  </script>
+
+</body>
+</html>
