@@ -129,6 +129,12 @@
         </div>
       </div>
 
+      <!-- Add this just before Code Editor Section -->
+<div class="content-section" style="margin-bottom: 20px;">
+  <button class="btn btn-success" onclick="generateCode()">Generate Starter Code</button>
+</div>
+
+
       <!-- Run Code Button -->
       <div class="col-md-12 mb-4">
         <button class="btn btn-success w-100" onclick="runCode()">Run Code</button>
@@ -215,6 +221,27 @@
         return true; // Prevent default error handling
       };
     }
+
+    function generateCode() {
+  const starterCode = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Starter Page</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #222; color: #eee; text-align: center; padding: 50px; }
+    h1 { color: #28a745; }
+  </style>
+</head>
+<body>
+  <h1>Welcome to AidivGPT!</h1>
+  <p>Edit this code and hit Run to see your magic.</p>
+</body>
+</html>`;
+  
+  document.getElementById('html-code').value = starterCode;
+}
+
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
